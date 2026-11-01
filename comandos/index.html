@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" href="../favicon.ico">
+<style>body{margin:0}</style>
+</head>
+<body>
+<title>Comandos do Zanthora</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: uma coluna de leitura, busca fixa no topo, tabelas comando → função */
+:root {
+  --bg: #f7f5f0; --surface: #ffffff; --fg: #23201a; --muted: #6d665a; --line: #e2dccf;
+  --gold: #a87411; --gold-soft: #f3e6c8; --code-bg: #f1ece1;
+  --r-ajud: #2f7d4f; --r-mod: #2160a8; --r-adm: #b03a2e;
+  --display: "Cinzel", Georgia, serif; --body: "Source Sans 3", system-ui, sans-serif; --mono: "JetBrains Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #16140f; --surface: #1f1c16; --fg: #ece6d8; --muted: #a59d8c; --line: #3a352b;
+  --gold: #e3b14e; --gold-soft: #3a2f17; --code-bg: #2a261e;
+  --r-ajud: #6fcf97; --r-mod: #7fb2f0; --r-adm: #f08a7e; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #16140f; --surface: #1f1c16; --fg: #ece6d8; --muted: #a59d8c; --line: #3a352b;
+  --gold: #e3b14e; --gold-soft: #3a2f17; --code-bg: #2a261e;
+  --r-ajud: #6fcf97; --r-mod: #7fb2f0; --r-adm: #f08a7e; color-scheme: dark }
+* { box-sizing: border-box }
+body { background: var(--bg); color: var(--fg); font: 16px/1.55 var(--body); }
+.wrap { max-width: 920px; margin: 0 auto; padding-block: 32px 64px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+header h1 { font: 700 clamp(28px, 6vw, 40px)/1.1 var(--display); letter-spacing: .04em; margin: 0; color: var(--gold); text-wrap: balance }
+header p { margin: 8px 0 0; color: var(--muted); max-width: 62ch }
+.coin { font-family: var(--body) }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg) }
+.bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); padding-block: 14px; margin-top: 20px;
+  display: flex; gap: 10px; flex-wrap: wrap; align-items: center; border-bottom: 1px solid var(--line) }
+.tabs { display: flex; gap: 4px; background: var(--code-bg); padding: 4px; border-radius: 8px }
+.tabs button { font: 600 15px var(--body); border: 0; background: transparent; color: var(--muted); padding: 7px 14px; border-radius: 6px; cursor: pointer }
+.tabs button[aria-selected="true"] { background: var(--surface); color: var(--fg); box-shadow: 0 1px 2px rgb(0 0 0 / .12) }
+.tabs button:focus-visible, #busca:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px }
+#busca { flex: 1 1 220px; min-width: 0; font: 15px var(--body); padding: 9px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); color: var(--fg) }
+section { margin-top: 30px }
+h2 { font: 600 19px/1.3 var(--display); letter-spacing: .03em; margin: 0 0 4px; text-wrap: balance }
+h3 { font: 600 15px/1.3 var(--display); letter-spacing: .03em; margin: 18px 0 4px }
+.nota { color: var(--muted); font-size: 14.5px; margin: 0 0 10px; max-width: 70ch }
+.tbl { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; background: var(--surface) }
+table { width: 100%; border-collapse: collapse; font-size: 15px }
+td { padding: 9px 12px; border-top: 1px solid var(--line); vertical-align: top }
+tr:first-child td { border-top: 0 }
+td:first-child { width: 42%; min-width: 220px }
+code { font: 500 13.5px/1.5 var(--mono); background: var(--code-bg); padding: 2px 6px; border-radius: 4px; white-space: nowrap }
+td code { white-space: normal; overflow-wrap: anywhere }
+.rk { display: inline-block; font: 600 11px var(--body); letter-spacing: .06em; text-transform: uppercase; padding: 1px 7px; border-radius: 99px; border: 1px solid currentColor; margin-left: 6px; vertical-align: 1px; white-space: nowrap }
+.ajud { color: var(--r-ajud) } .mod { color: var(--r-mod) } .adm { color: var(--r-adm) }
+.legenda { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 14px; color: var(--muted); margin-top: 18px }
+.legenda .rk { margin-left: 0; margin-right: 6px }
+.vazio { color: var(--muted); padding: 24px 0 }
+footer { margin-top: 40px; color: var(--muted); font-size: 14px; border-top: 1px solid var(--line); padding-top: 14px }
+@media (max-width: 520px) { td { display: block; width: auto !important; min-width: 0 !important } td + td { border-top: 0; padding-top: 0; color: var(--muted) } }
+</style>
+
+<div class="wrap">
+<header>
+  <h1>✦ Zanthora ✦</h1>
+  <p>Comandos para jogadores. <code>&lt;obrigatório&gt;</code> e <code>[opcional]</code>. Dinheiro em <span class="coin">⛃</span>. Java: <code>zanthora.jogar.io:10029</code> · Bedrock: <code>jensen-hanging.tun.ply.gg</code> porta <code>19132</code></p>
+  <p><a href="https://clear2000.github.io/zanthora-mapa/guia/" style="color:var(--gold);font-weight:600">Novo por aqui? Leia o Guia do Zanthora →</a></p>
+</header>
+
+<div class="bar">
+  <input id="busca" type="search" placeholder="Buscar comando ou função…" aria-label="Buscar comando">
+</div>
+
+<!-- ================= JOGADORES ================= -->
+<div id="jogadores" class="painel">
+
+<section><h2>Conta e acesso</h2>
+<p class="nota">O servidor pede senha (AuthMe). Bedrock entra com o nome <code>.NomeDoXbox</code> e também registra.</p>
+<div class="tbl"><table>
+<tr><td><code>/register &lt;senha&gt; &lt;senha&gt;</code></td><td>Cria sua senha no primeiro acesso</td></tr>
+<tr><td><code>/login &lt;senha&gt;</code></td><td>Entra na conta nas próximas vezes</td></tr>
+<tr><td><code>/changepassword &lt;antiga&gt; &lt;nova&gt;</code></td><td>Troca a senha</td></tr>
+</table></div></section>
+
+<section><h2>Básicos e teleporte</h2>
+<p class="nota">Teleportes não funcionam em combate (15 s depois do último golpe).</p>
+<div class="tbl"><table>
+<tr><td><code>/spawn</code></td><td>Volta ao spawn (área protegida, sem PvP)</td></tr>
+<tr><td><code>/repair</code></td><td>Conserta o item da mão — custa 300 ⛃</td></tr>
+<tr><td><code>/ec</code></td><td>Abre seu baú do fim de qualquer lugar (grátis)</td></tr>
+<tr><td><code>/hat</code></td><td>Coloca o bloco da mão na cabeça — custa 100 ⛃</td></tr>
+<tr><td><code>/sethome [nome]</code></td><td>Marca uma casa onde você está (pode ter várias)</td></tr>
+<tr><td><code>/home [nome]</code></td><td>Vai para sua casa</td></tr>
+<tr><td><code>/delhome &lt;nome&gt;</code></td><td>Apaga uma casa</td></tr>
+<tr><td><code>/tpa &lt;nick&gt;</code></td><td>Pede para ir até um jogador</td></tr>
+<tr><td><code>/tpahere &lt;nick&gt;</code></td><td>Pede para o jogador vir até você</td></tr>
+<tr><td><code>/tpaccept</code> · <code>/tpdeny</code></td><td>Aceita ou recusa um pedido de teleporte</td></tr>
+<tr><td><code>/tpacancel</code></td><td>Cancela o pedido que você fez</td></tr>
+<tr><td><code>/warp [nome]</code></td><td>Lista ou usa os warps do servidor</td></tr>
+<tr><td><code>/rules</code> · <code>/motd</code> · <code>/help</code></td><td>Regras, mensagem do dia e ajuda</td></tr>
+<tr><td><code>/list</code></td><td>Quem está online</td></tr>
+<tr><td><code>/seen &lt;nick&gt;</code></td><td>Quando o jogador entrou pela última vez</td></tr>
+<tr><td><code>/afk</code></td><td>Marca você como ausente</td></tr>
+<tr><td><code>/discord</code></td><td>Link clicável do Discord do servidor</td></tr>
+<tr><td><code>/reinicio</code></td><td>Mostra quando é o próximo reinício (todo dia às 04:00)</td></tr>
+</table></div></section>
+
+<section><h2>Chat e mensagens</h2>
+<div class="tbl"><table>
+<tr><td><code>/msg &lt;nick&gt; &lt;texto&gt;</code></td><td>Mensagem privada</td></tr>
+<tr><td><code>/r &lt;texto&gt;</code></td><td>Responde a última mensagem privada</td></tr>
+<tr><td><code>/ignore &lt;nick&gt;</code></td><td>Para de ver mensagens desse jogador (use de novo para desfazer)</td></tr>
+<tr><td><code>/mail send &lt;nick&gt; &lt;texto&gt;</code></td><td>Deixa um recado para quem está offline</td></tr>
+<tr><td><code>/mail read</code> · <code>/mail clear</code></td><td>Lê ou limpa seus recados</td></tr>
+</table></div></section>
+
+<section><h2>Dinheiro</h2>
+<p class="nota">Todo jogador novo começa com 100 ⛃. O dinheiro físico (moedas e cédulas) pode ser guardado em baús, usado em trocas e lojas de baú e roubado de quem morre. As lojas do spawn usam o saldo direto.</p>
+<div class="tbl"><table>
+<tr><td><code>/money [nick]</code></td><td>Mostra o seu saldo (ou de outro jogador)</td></tr>
+<tr><td><code>/pay &lt;nick&gt; &lt;valor&gt;</code></td><td>Transfere dinheiro</td></tr>
+<tr><td><code>/baltop</code></td><td>Ranking dos mais ricos</td></tr>
+<tr><td><code>/sacar &lt;valor&gt;</code></td><td>Tira do saldo e vira moedas/cédulas na mão (Barra 10.000 · Cédula 1.000 · Ouro 100 · Prata 10 · Cobre 1)</td></tr>
+<tr><td><code>/depositar</code> · <code>/depositar tudo</code></td><td>Devolve ao saldo o dinheiro da mão ou do inventário todo</td></tr>
+<tr><td>Clique direito com a moeda</td><td>Deposita 1 (agachado deposita a pilha)</td></tr>
+<tr><td><code>/convite &lt;nick&gt;</code></td><td>Novato: diga quem te chamou (nas primeiras 24h). Quando você completar 2h de jogo, quem convidou ganha 500 ⛃ e você 200 ⛃. Sem nick mostra quem você trouxe (até 5 pagos por semana; contas na mesma conexão não contam)</td></tr>
+<tr><td><code>/diaria</code></td><td>Sua sequência de recompensa diária (50 ⛃ no dia 1, até 200 ⛃ no dia 7; paga sozinha ao logar)</td></tr>
+</table></div></section>
+
+<section><h2>Lojas</h2>
+<div class="tbl"><table>
+<tr><td>Baú + item na mão + clique esquerdo</td><td>Cria sua loja física; digite o preço no chat</td></tr>
+<tr><td><code>/qs buy</code> · <code>/qs sell</code></td><td>Troca a loja para comprar ou vender (olhando para o baú)</td></tr>
+<tr><td><code>/qs price &lt;valor&gt;</code></td><td>Muda o preço da loja (por unidade, ou por pacote se usou <code>/qs size</code>). Use ponto: <code>1.25</code></td></tr>
+<tr><td><code>/qs size &lt;quantidade&gt;</code></td><td>Vende em pacote: <code>/qs size 64</code> + <code>/qs price 80</code> = 64 itens por 80</td></tr>
+<tr><td><code>/qs remove</code></td><td>Remove a loja</td></tr>
+<tr><td><code>/qs find &lt;item&gt;</code></td><td>Acha a loja mais perto que vende o item</td></tr>
+<tr><td>Vender para os villagers</td><td>Sem limite diário de venda. O preço de cada item cai conforme os jogadores vendem (oferta e demanda)</td></tr>
+<tr><td>Villager <b>Raridades</b></td><td>Livros encantados (Remendo, Inquebrável III, Eficiência V, Fortuna III, Toque de Seda, Proteção IV, Queda de Pena IV, Afiação V, Saque III), élitro, tridente, maçã dourada encantada, totem, coração do mar, etiqueta e sela. Preço fixo</td></tr>
+<tr><td><code>/promocao</code></td><td>Promoções das lojas do spawn: o que está com desconto hoje, até quando, quantos itens você ainda pode levar e as próximas do mês (dias 1–2 Minerador, 8–9 Construção, 15–16 Campo, 22–23 Redstone, 28 Ferreiro). Item em promoção brilha no menu do villager</td></tr>
+<tr><td><code>/ah</code></td><td>Abre o leilão do servidor</td></tr>
+<tr><td><code>/ah sell &lt;preço&gt;</code></td><td>Anuncia o item da mão no leilão (taxa de 5%)</td></tr>
+<tr><td><code>/ah search &lt;item&gt;</code></td><td>Procura um item no leilão</td></tr>
+<tr><td><code>/ah expired</code></td><td>Recupera itens que não venderam</td></tr>
+<tr><td>Clique no villager da loja</td><td>Abre o menu da loja: clique esquerdo compra, direito vende, com Shift compra/vende vários. Usa o seu saldo, sem precisar sacar. Os preços mudam com a oferta e demanda (de 50% a 150% do normal)</td></tr>
+</table></div></section>
+
+<section><h2>Recompensa por cabeça</h2>
+<p class="nota">Cada kill aumenta o valor da sua cabeça (+50, +75, +100… sem limite). Quem te matar leva tudo. Matar a mesma pessoa em menos de 30 min, contas do mesmo IP ou aliados não conta.</p>
+<div class="tbl"><table>
+<tr><td><code>/bounty</code></td><td>Painel dos procurados</td></tr>
+<tr><td><code>/bounty add &lt;nick&gt; &lt;valor&gt;</code></td><td>Coloca dinheiro seu na cabeça de alguém (mínimo 10 ⛃; aceita <code>10k</code>)</td></tr>
+<tr><td><code>/sequencia [nick]</code></td><td>Sequência de kills e quanto a cabeça vale</td></tr>
+</table></div></section>
+
+<section><h2>PvP</h2>
+<p class="nota">Novatos têm 30 min de proteção. Quem desloga em combate morre e perde os itens.</p>
+<div class="tbl"><table>
+<tr><td><code>/newbie disable</code></td><td>Tira sua proteção de novato antes do tempo</td></tr>
+</table></div></section>
+
+<section><h2>Clã (cidade)</h2>
+<p class="nota">Clã = cidade do Towny. Fora das cidades qualquer um constrói. Não dá para criar cidade perto do spawn.</p>
+<div class="tbl"><table>
+<tr><td><code>/t new &lt;nome&gt;</code></td><td>Cria a cidade (custa dinheiro)</td></tr>
+<tr><td><code>/t</code> · <code>/t here</code></td><td>Informações da sua cidade / do terreno onde você está</td></tr>
+<tr><td><code>/t claim</code></td><td>Protege o chunk onde você está</td></tr>
+<tr><td><code>/t unclaim</code></td><td>Solta o chunk</td></tr>
+<tr><td><code>/t add &lt;nick&gt;</code> · <code>/t kick &lt;nick&gt;</code></td><td>Convida ou expulsa um morador</td></tr>
+<tr><td><code>/t join &lt;cidade&gt;</code> · <code>/t leave</code></td><td>Entra (se for aberta ou convidado) ou sai da cidade</td></tr>
+<tr><td><code>/t deposit &lt;valor&gt;</code> · <code>/t withdraw &lt;valor&gt;</code></td><td>Põe ou tira dinheiro do banco da cidade (paga a manutenção diária)</td></tr>
+<tr><td><code>/t rank add &lt;nick&gt; assistant</code></td><td>Dá cargo de assistente</td></tr>
+<tr><td><code>/t toggle pvp</code></td><td>Liga ou desliga PvP dentro da cidade</td></tr>
+<tr><td><code>/t spawn</code> · <code>/t set spawn</code></td><td>Vai para o spawn da cidade / define onde ele fica</td></tr>
+<tr><td><code>/t online</code> · <code>/t list</code></td><td>Moradores online / todas as cidades</td></tr>
+<tr><td><code>/tc &lt;texto&gt;</code></td><td>Chat só da cidade</td></tr>
+<tr><td><code>/cla terreno</code></td><td>Mostra de quem é o chunk onde você está (com a borda marcada)</td></tr>
+<tr><td><code>/cla terreno dar &lt;nick&gt;</code></td><td>Prefeito: dá o chunk onde você está para um morador. Só ele (e os amigos dele) constroem e abrem baús lá; nem o prefeito mexe</td></tr>
+<tr><td><code>/cla terreno tirar</code> · <code>/cla terreno devolver</code></td><td>Prefeito retoma o terreno / o dono devolve o próprio terreno ao clã (pede confirmação)</td></tr>
+<tr><td><code>/cla terrenos</code></td><td>Quem tem terreno particular e onde</td></tr>
+<tr><td><code>/res friend add &lt;nick&gt;</code></td><td>Deixa um amigo construir e abrir baús nos seus terrenos</td></tr>
+</table></div>
+<h3>Cofre, melhorias e diplomacia</h3>
+<p class="nota">Aliança militar não junta os clãs (não é nação): cada um continua independente, mas aliados e clãs em trégua não trocam dano. Melhorias são pagas pelo banco do clã (<code>/t deposit</code>) e só o prefeito compra. Diplomacia é só do prefeito.</p>
+<div class="tbl"><table>
+<tr><td><code>/cla</code></td><td>Painel do clã: cofre, melhorias e relações</td></tr>
+<tr><td><code>/cla cofre</code></td><td>Cofre compartilhado (27 espaços; 54 com melhoria). Abre para o prefeito e quem tem o cargo <code>assistant</code></td></tr>
+<tr><td><code>/cla melhorias</code></td><td>Cofre Grande, Terras Extras (+16 terrenos por nível), Ruas Rápidas (Velocidade), Oficinas (Pressa) e Fartura (sem fome), valendo dentro da sua cidade</td></tr>
+<tr><td><code>/cla alianca convidar &lt;clã&gt;</code> · <code>romper &lt;clã&gt;</code></td><td>Propõe ou desfaz a aliança militar (máximo 3 aliados)</td></tr>
+<tr><td><code>/ca &lt;texto&gt;</code></td><td>Chat com os clãs aliados</td></tr>
+<tr><td><code>/cla rival &lt;clã&gt;</code> · <code>/cla paz &lt;clã&gt;</code></td><td>Declara rivalidade (anunciado no servidor; abates contam no ranking) / propõe as pazes</td></tr>
+<tr><td><code>/cla tregua &lt;clã&gt; &lt;dias&gt;</code></td><td>Propõe trégua de 1 a 7 dias: ninguém dos dois clãs se ataca</td></tr>
+<tr><td><code>/cla tributo &lt;clã&gt; &lt;valor&gt; &lt;dias&gt;</code></td><td>Oferece pagar um valor por dia, do seu banco para o deles (se faltar dinheiro, o acordo quebra)</td></tr>
+<tr><td><code>/cla aceitar &lt;clã&gt;</code> · <code>/cla recusar &lt;clã&gt;</code></td><td>Responde a uma proposta (vale 10 min)</td></tr>
+<tr><td><code>/cla relacoes [clã]</code></td><td>Aliados, tréguas, rivais e tributos de um clã</td></tr>
+<tr><td><code>/cla contribuicao</code></td><td>Quanto cada morador (o prefeito também) paga por dia ao banco do clã, e quem está devendo. O prefeito ajusta clicando nas cabeças</td></tr>
+<tr><td><code>/cla contribuicao padrao &lt;valor&gt;</code></td><td>Prefeito: valor diário de todos que não têm um valor próprio (até 500 ⛃)</td></tr>
+<tr><td><code>/cla contribuicao &lt;nick&gt; &lt;valor&gt;</code> · <code>... &lt;nick&gt; padrao</code></td><td>Prefeito: valor próprio de um morador / volta para o padrão</td></tr>
+<tr><td><code>/cla contribuicao pagar</code></td><td>Paga o que você deve. Sem saldo na cobrança (todo dia às 12h), o valor vira dívida e é cobrado junto na próxima</td></tr>
+</table></div></section>
+
+<section><h2>Profissões, missões e conquistas</h2>
+<p class="nota">Minerar, cortar madeira, plantar, caçar e pescar dá XP na profissão (blocos colocados por jogadores e mobs de spawner não contam). A cada 3 níveis você ganha 1 ponto de habilidade. No nível 10 de cada profissão você escolhe um caminho (lista abaixo). Missões novas todo dia e toda semana, iguais para todos.</p>
+<div class="tbl"><table>
+<tr><td><code>/profissoes</code></td><td>Nível das 5 profissões, habilidades gerais (sorte, ferramenta resistente, XP extra) e o caminho escolhido</td></tr>
+<tr><td><code>/missoes</code></td><td>Missões diárias e semanais com o progresso e a recompensa. Completar todas as diárias dá bônus</td></tr>
+<tr><td><code>/conquistas</code></td><td>Conquistas do servidor: cada uma paga uma vez e libera um título para o chat</td></tr>
+<tr><td><code>/titulo &lt;id&gt;</code> · <code>/titulo tirar</code></td><td>Equipa um título que você já liberou / tira o título</td></tr>
+</table></div>
+<h3>Caminhos das profissões</h3>
+<p class="nota">No nível 10 de cada profissão você escolhe 1 de 3 caminhos em /profissoes. Cada caminho tem 2 habilidades (liberam nos níveis 10 e 20) e um poder (nível 35). Para usar o poder: segure a ferramenta da profissão, agache e clique com o botão direito. O primeiro caminho é grátis; trocar custa 1.500 ⛃ e os pontos voltam.</p>
+<div class="tbl"><table>
+<tr><td>⛏️ Escavador</td><td>Pressa com picareta, chance de quebrar 3x3. Poder <b>Terremoto</b>: 15s cavando em 3x3</td></tr>
+<tr><td>💎 Prospector</td><td>Mais minério dobrado, acha minério na pedra. Poder <b>Visão de Minério</b>: minérios brilham através das paredes</td></tr>
+<tr><td>🔥 Forjador</td><td>Minério já cai em barra, menos dano de fogo. Poder <b>Picareta Incandescente</b>: 30s de minério derretido em dobro</td></tr>
+<tr><td>🌲 Derrubador</td><td>Corta o tronco de cima, velocidade ao cortar. Poder <b>Queda da Árvore</b>: derruba a árvore inteira</td></tr>
+<tr><td>🌱 Guardião da Floresta</td><td>Replanta a muda, cai maçã. Poder <b>Bênção da Floresta</b>: mudas crescem e o grupo ganha regeneração</td></tr>
+<tr><td>🪓 Machado de Guerra</td><td>Mais dano e menos dano recebido com machado. Poder <b>Golpe Partidor</b>: golpe x2,5 que arremessa</td></tr>
+<tr><td>🌾 Agricultor</td><td>Mais colheita dupla, replantio automático. Poder <b>Chuva Fértil</b>: plantações em volta crescem na hora</td></tr>
+<tr><td>🐄 Pecuarista</td><td>Filhotes gêmeos, mais carne e couro. Poder <b>Chamado do Rebanho</b>: filhotes crescem e adultos cruzam de novo</td></tr>
+<tr><td>🍲 Cozinheiro</td><td>Comida rende mais, colheita dourada rara. Poder <b>Banquete</b>: sacia e cura quem está perto</td></tr>
+<tr><td>🗡️ Guerreiro</td><td>Mais dano em monstros, cura ao matar. Poder <b>Fúria Berserker</b>: força e golpes em área</td></tr>
+<tr><td>🏹 Arqueiro</td><td>Flechas mais fortes, chance de não gastar flecha. Poder <b>Chuva de Flechas</b>: 24 flechas onde você mira</td></tr>
+<tr><td>👁️ Predador</td><td>Menos dano de monstros, cabeças e saque dobrado. Poder <b>Olhar do Predador</b>: monstros brilham e ficam lentos</td></tr>
+<tr><td>🐟 Mestre do Cardume</td><td>Mais pesca dupla, peixe morde mais rápido. Poder <b>Cardume</b>: 30s de pesca triplicada</td></tr>
+<tr><td>💰 Caçador de Tesouros</td><td>Tesouros extras, Sorte com a vara. Poder <b>Baú Afundado</b>: a próxima pesca puxa um baú de tesouros</td></tr>
+<tr><td>🌊 Lobo do Mar</td><td>Respira e enxerga na água, tridente mais forte. Poder <b>Gancho</b>: a vara lança você para onde olha</td></tr>
+</table></div></section>
+
+<section><h2>Eventos</h2>
+<p class="nota">Chuva de meteoros: de tempos em tempos (com 2+ jogadores online) um meteoro é anunciado com as coordenadas e cai 3 minutos depois, longe das cidades. Quem abrir o baú primeiro leva os itens; ele some em 15 min. Também aparece no mapa. Hora Dobrada: sexta 20h, sábado e domingo 16h, por 1 hora: XP de profissão x2 e os villagers pagam +25% (o limite diário continua).</p>
+<div class="tbl"><table>
+<tr><td><code>/evento</code></td><td>Status do próximo meteoro e horários da Hora Dobrada</td></tr>
+</table></div></section>
+
+<section><h2>Aliança (nação) e guerra</h2>
+<p class="nota">Nação = aliança de cidades. Guerra pelo SiegeWar: o cerco usa uma bandeira perto da cidade inimiga e as batalhas acontecem em horários fixos.</p>
+<div class="tbl"><table>
+<tr><td><code>/n new &lt;nome&gt;</code></td><td>Cria a nação (sua cidade vira a capital)</td></tr>
+<tr><td><code>/n add &lt;cidade&gt;</code> · <code>/n leave</code></td><td>Convida uma cidade / sua cidade sai da nação</td></tr>
+<tr><td><code>/n ally add &lt;nação&gt;</code></td><td>Propõe aliança (as duas precisam aceitar)</td></tr>
+<tr><td><code>/n enemy add &lt;nação&gt;</code></td><td>Declara inimizade</td></tr>
+<tr><td><code>/n rank add &lt;nick&gt; general</code></td><td>Cargo militar (private até general)</td></tr>
+<tr><td><code>/nc &lt;texto&gt;</code></td><td>Chat só da nação</td></tr>
+<tr><td><code>/sw</code></td><td>Ajuda do SiegeWar</td></tr>
+<tr><td><code>/sw nextsession</code></td><td>Próxima sessão de batalha</td></tr>
+<tr><td><code>/sw hud</code></td><td>Mostra o placar do cerco na tela</td></tr>
+<tr><td><code>/sw collect</code></td><td>Recebe pagamentos de guerra</td></tr>
+<tr><td><code>/sw town togglepeaceful</code></td><td>Cidade pacífica: não é atacada, mas também não ataca</td></tr>
+</table></div></section>
+
+<section><h2>Visual e estatísticas</h2>
+<div class="tbl"><table>
+<tr><td><code>/skin &lt;nick&gt;</code></td><td>Usa a skin de qualquer conta original</td></tr>
+<tr><td><code>/skin &lt;link .png&gt;</code></td><td>Usa uma imagem como skin</td></tr>
+<tr><td><code>/skins</code> · <code>/skin clear</code></td><td>Menu de skins / volta ao padrão</td></tr>
+<tr><td><code>/placar</code></td><td>Esconde ou mostra o placar lateral</td></tr>
+<tr><td><code>/playtime</code> · <code>/playtimetop</code></td><td>Seu tempo de jogo / ranking (o tempo sobe seu rank: Aventureiro, Guerreiro, Elite, Lenda)</td></tr>
+<tr><td>Mapa web</td><td><code>clear2000.github.io/zanthora-mapa</code> (mostra terreno, clãs, alianças/rivalidades e meteoros, nunca jogadores)</td></tr>
+</table></div></section>
+</div>
+
+<p id="vazio" class="vazio" hidden>Nenhum comando encontrado.</p>
+
+<footer>Zanthora · Paper 26.3 · Discord: <code>discord.gg/sTVyFC78kt</code></footer>
+</div>
+
+<script>
+const busca = document.getElementById('busca');
+function filtrar() {
+  const q = busca.value.trim().toLowerCase();
+  let total = 0;
+  document.querySelectorAll('.painel section').forEach(sec => {
+    let n = 0;
+    sec.querySelectorAll('tr').forEach(tr => {
+      const ok = !q || tr.textContent.toLowerCase().includes(q);
+      tr.hidden = !ok; if (ok) n++;
+    });
+    sec.hidden = n === 0; total += n;
+  });
+  document.getElementById('vazio').hidden = total > 0;
+}
+busca.addEventListener('input', filtrar);
+</script>
+
+</body>
+</html>
