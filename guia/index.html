@@ -1,0 +1,547 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" href="../favicon.ico">
+<style>body{margin:0}</style>
+</head>
+<body>
+<title>Guia do Zanthora</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: guia de leitura em capítulos; trilha de capítulos fixa no topo; cada sistema = explicação curta + blocos com números reais */
+:root {
+  --bg: #f6f3ec; --surface: #ffffff; --sunk: #efe9dc; --fg: #221f18; --muted: #6b6457; --line: #e0d8c8;
+  --gold: #a26f0e; --gold-soft: #f3e5c4;
+  --min: #5d6b7a; --len: #3f7a3a; --faz: #8a7a12; --cac: #b0402f; --pes: #22709a;
+  --ok: #2f7d4f; --warn: #a8640c; --bad: #b03a2e;
+  --display: "Cinzel", Georgia, serif; --body: "Source Sans 3", system-ui, sans-serif; --mono: "JetBrains Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #15130e; --surface: #1e1b15; --sunk: #28241c; --fg: #ece6d8; --muted: #a49c8b; --line: #383228;
+  --gold: #e3b14e; --gold-soft: #3a2f17;
+  --min: #9fb0c2; --len: #7fc477; --faz: #d8c450; --cac: #f0806f; --pes: #6cc0ec;
+  --ok: #6fcf97; --warn: #f0b45e; --bad: #f08a7e; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #15130e; --surface: #1e1b15; --sunk: #28241c; --fg: #ece6d8; --muted: #a49c8b; --line: #383228;
+  --gold: #e3b14e; --gold-soft: #3a2f17;
+  --min: #9fb0c2; --len: #7fc477; --faz: #d8c450; --cac: #f0806f; --pes: #6cc0ec;
+  --ok: #6fcf97; --warn: #f0b45e; --bad: #f08a7e; color-scheme: dark }
+
+* { box-sizing: border-box }
+body { background: var(--bg); color: var(--fg); font: 17px/1.6 var(--body); }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg) }
+.wrap { max-width: 980px; margin: 0 auto; padding-block: 0 72px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+a { color: var(--gold) }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; border-radius: 4px }
+
+/* Abertura */
+.abertura { padding-block: 44px 28px; display: grid; gap: 18px }
+.eyebrow { font: 700 12.5px var(--body); letter-spacing: .16em; text-transform: uppercase; color: var(--gold) }
+h1 { font: 700 clamp(34px, 7vw, 58px)/1.02 var(--display); letter-spacing: .03em; margin: 0; text-wrap: balance }
+.abertura p { margin: 0; max-width: 60ch; color: var(--muted); font-size: 18px }
+.ips { display: flex; flex-wrap: wrap; gap: 10px }
+.ip { display: grid; gap: 2px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 10px 14px; min-width: 0 }
+.ip span { font: 600 11.5px var(--body); letter-spacing: .1em; text-transform: uppercase; color: var(--muted) }
+.ip code { font: 500 14.5px var(--mono); overflow-wrap: anywhere }
+.links { display: flex; flex-wrap: wrap; gap: 8px 18px; font-weight: 600 }
+
+/* Trilha de capítulos */
+.trilha { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); border-bottom: 1px solid var(--line);
+  margin-inline: calc(-1 * max(16px, env(safe-area-inset-left, 0px))); padding-inline: max(16px, env(safe-area-inset-left, 0px)); }
+.trilha nav { display: flex; gap: 6px; overflow-x: auto; padding-block: 10px; scrollbar-width: thin }
+.trilha a { flex: none; text-decoration: none; color: var(--muted); font: 600 14.5px var(--body); padding: 6px 12px; border-radius: 99px; border: 1px solid transparent }
+.trilha a:hover { color: var(--fg); border-color: var(--line) }
+.trilha a.atual { color: var(--fg); background: var(--surface); border-color: var(--line) }
+
+/* Capítulos */
+.cap { padding-top: 56px; scroll-margin-top: 64px }
+.cap > header { display: grid; gap: 6px; margin-bottom: 22px; max-width: 68ch }
+h2 { font: 700 clamp(26px, 4.6vw, 36px)/1.1 var(--display); letter-spacing: .02em; margin: 0; text-wrap: balance }
+.cap > header p { margin: 0; color: var(--muted) }
+h3 { font: 600 19px/1.3 var(--display); letter-spacing: .02em; margin: 0; text-wrap: balance }
+h4 { font: 700 13px var(--body); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin: 0 }
+p { margin: 0 }
+.texto { max-width: 68ch; display: grid; gap: 10px }
+code { font: 500 14px/1.5 var(--mono); background: var(--sunk); padding: 1px 6px; border-radius: 4px; overflow-wrap: anywhere }
+.moeda { font-variant-numeric: tabular-nums; white-space: nowrap; font-weight: 600 }
+
+.grade { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)) }
+.grade.duas { grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr)) }
+.bloco { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 18px; display: grid; gap: 10px; align-content: start; min-width: 0 }
+.bloco p { color: var(--muted); font-size: 16px }
+.bloco .cmd { font-size: 14.5px; color: var(--fg) }
+.pilha { display: grid; gap: 22px }
+.dica { border-left: 3px solid var(--gold); background: var(--gold-soft); padding: 12px 16px; border-radius: 0 10px 10px 0; max-width: 72ch; font-size: 16px }
+.dica b { color: var(--fg) }
+
+/* Passos reais (sequência) */
+.passos { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; counter-reset: p; grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr)) }
+.passos li { counter-increment: p; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px; display: grid; gap: 6px; align-content: start }
+.passos li::before { content: counter(p); font: 700 22px var(--display); color: var(--gold) }
+.passos b { font-size: 16.5px }
+.passos span { color: var(--muted); font-size: 15.5px }
+
+/* Moedas */
+.moedas { display: flex; flex-wrap: wrap; gap: 8px }
+.moedas div { display: flex; align-items: baseline; gap: 8px; border: 1px solid var(--line); background: var(--sunk); border-radius: 99px; padding: 5px 14px; font-size: 15px }
+.moedas b { font-variant-numeric: tabular-nums }
+
+/* Tabelas */
+.tbl { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; background: var(--surface) }
+table { width: 100%; border-collapse: collapse; font-size: 15.5px }
+th, td { padding: 10px 14px; text-align: left; vertical-align: top; border-top: 1px solid var(--line) }
+th { font: 700 12.5px var(--body); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); border-top: 0; background: var(--sunk) }
+td.n { font-variant-numeric: tabular-nums; white-space: nowrap; text-align: right }
+th.n { text-align: right }
+
+/* Trilha de níveis da profissão */
+.nivel { position: relative; margin: 8px 0 4px; padding: 30px 0 64px; min-width: 520px }
+.nivel .linha { height: 8px; border-radius: 99px; background: linear-gradient(90deg, var(--gold) 0 96%, var(--line) 96%) }
+.nivel .marco { position: absolute; top: 18px; transform: translateX(-50%); display: grid; justify-items: center; gap: 6px; width: 120px; text-align: center }
+.nivel .marco i { width: 16px; height: 16px; border-radius: 50%; background: var(--surface); border: 3px solid var(--gold); display: block; margin-top: 4px }
+.nivel .marco b { font: 700 13px var(--mono); color: var(--gold) }
+.nivel .marco span { font-size: 13.5px; line-height: 1.3; color: var(--muted) }
+.nivel-box { overflow-x: auto; padding-inline: 50px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface) }
+
+/* Abas das profissões */
+.abas { display: flex; flex-wrap: wrap; gap: 6px }
+.abas button { font: 600 15.5px var(--body); color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 99px; padding: 7px 16px; cursor: pointer }
+.abas button[aria-selected="true"] { color: var(--surface); background: var(--pc); border-color: var(--pc) }
+.prof { display: grid; gap: 16px; --pc: var(--gold) }
+.prof-topo { display: grid; gap: 6px; max-width: 70ch }
+.xp { display: flex; flex-wrap: wrap; gap: 6px }
+.xp span { font-size: 14px; border: 1px solid var(--line); background: var(--sunk); border-radius: 6px; padding: 2px 9px }
+.xp b { font-variant-numeric: tabular-nums; color: var(--pc) }
+.caminhos { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)) }
+.caminho { background: var(--surface); border: 1px solid var(--line); border-top: 4px solid var(--pc); border-radius: 12px; padding: 18px; display: grid; gap: 12px; align-content: start; min-width: 0 }
+.caminho header { display: grid; gap: 2px }
+.caminho header p { color: var(--muted); font-size: 15px }
+.hab { display: grid; grid-template-columns: 54px 1fr; gap: 4px 10px; align-items: baseline }
+.hab .nv { font: 700 12px var(--mono); color: var(--muted); white-space: nowrap }
+.hab b { font-size: 15.5px }
+.hab p { grid-column: 2; color: var(--muted); font-size: 14.5px; line-height: 1.45 }
+.poder { background: var(--sunk); border-radius: 10px; padding: 12px; display: grid; gap: 4px }
+.poder .rot { font: 700 11.5px var(--body); letter-spacing: .12em; text-transform: uppercase; color: var(--pc) }
+.poder b { font-size: 16.5px }
+.poder p { color: var(--muted); font-size: 14.5px; line-height: 1.45 }
+.rec { justify-self: start; font: 600 12.5px var(--mono); border: 1px solid var(--line); border-radius: 99px; padding: 1px 9px; color: var(--muted) }
+
+/* Conquistas */
+.conq { display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr)) }
+.conq div { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; display: grid; gap: 3px; min-width: 0 }
+.conq b { font-size: 15.5px }
+.conq span { color: var(--muted); font-size: 14px }
+.conq em { font-style: normal; font: 600 12.5px var(--mono); color: var(--gold) }
+
+/* Meteoro: linha do tempo */
+.tempo { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: var(--surface) }
+.tempo div { padding: 14px; display: grid; gap: 4px; border-left: 1px solid var(--line); align-content: start }
+.tempo div:first-child { border-left: 0 }
+.tempo b { font: 700 13px var(--mono); color: var(--gold) }
+.tempo span { font-size: 15px }
+@media (max-width: 640px) { .tempo { grid-template-columns: 1fr 1fr } .tempo div:nth-child(3) { border-left: 0 } .tempo div:nth-child(n+3) { border-top: 1px solid var(--line) } }
+.chance { display: grid; grid-template-columns: minmax(0, 11em) 1fr 3.4em; gap: 6px 10px; align-items: center; font-size: 15px }
+.chance .b { height: 8px; border-radius: 99px; background: var(--sunk); overflow: hidden }
+.chance .b i { display: block; height: 100%; background: var(--gold); border-radius: 99px }
+.chance .p { font-variant-numeric: tabular-nums; text-align: right; color: var(--muted) }
+
+/* Diplomacia */
+.rel { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)) }
+.rel div { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px; display: grid; gap: 4px; border-left: 4px solid var(--c) }
+.rel span { color: var(--muted); font-size: 14.5px }
+
+footer { margin-top: 64px; padding-top: 16px; border-top: 1px solid var(--line); color: var(--muted); font-size: 15px; display: flex; flex-wrap: wrap; gap: 8px 20px }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth } }
+</style>
+
+<div class="wrap">
+
+<section class="abertura">
+  <div class="eyebrow">Servidor de sobrevivência · Java e Bedrock</div>
+  <h1>Guia do Zanthora</h1>
+  <p>Tudo o que você precisa saber para começar: como ganhar dinheiro, evoluir sua profissão, montar um clã e aproveitar os eventos. Cada parte explica como funciona e traz os números de verdade.</p>
+  <div class="ips">
+    <div class="ip"><span>Java</span><code>zanthora.jogar.io:10029</code></div>
+    <div class="ip"><span>Bedrock</span><code>jensen-hanging.tun.ply.gg · porta 19132</code></div>
+  </div>
+  <div class="links">
+    <a href="https://clear2000.github.io/zanthora-mapa/comandos/">Lista de comandos</a>
+    <a href="https://clear2000.github.io/zanthora-mapa/">Mapa ao vivo</a>
+    <a href="https://discord.gg/sTVyFC78kt">Discord</a>
+  </div>
+</section>
+
+<div class="trilha"><nav aria-label="Capítulos">
+  <a href="#comeco">Começo</a>
+  <a href="#dinheiro">Dinheiro</a>
+  <a href="#profissoes">Profissões</a>
+  <a href="#missoes">Missões e conquistas</a>
+  <a href="#eventos">Eventos</a>
+  <a href="#clas">Clãs</a>
+  <a href="#guerra">Nações e guerra</a>
+  <a href="#pvp">PvP</a>
+</nav></div>
+
+<!-- ================= COMEÇO ================= -->
+<section class="cap" id="comeco">
+  <header>
+    <div class="eyebrow">Primeiros minutos</div>
+    <h2>Começando no servidor</h2>
+    <p>O caminho mais rápido do primeiro login até ter casa, clã e dinheiro entrando.</p>
+  </header>
+  <ol class="passos">
+    <li><b>Crie sua senha</b><span><code>/register &lt;senha&gt; &lt;senha&gt;</code> no primeiro acesso, depois <code>/login</code>. No Bedrock seu nome começa com ponto.</span></li>
+    <li><b>Saia do spawn</b><span>O spawn é protegido e sem PvP. Ande para longe e escolha onde morar; fora das cidades qualquer um pode construir.</span></li>
+    <li><b>Marque sua casa</b><span><code>/sethome</code> onde você está e <code>/home</code> para voltar. Pode ter várias.</span></li>
+    <li><b>Entre em um clã</b><span>Peça convite a um prefeito ou crie o seu com <code>/t new &lt;nome&gt;</code>. Clã protege suas construções.</span></li>
+    <li><b>Pegue suas missões</b><span><code>/missoes</code> todo dia. É o jeito mais garantido de ganhar dinheiro no começo.</span></li>
+  </ol>
+  <div class="dica" style="margin-top:18px"><b>Proteção de novato:</b> você tem 30 minutos sem PvP ao entrar pela primeira vez. Use para se afastar do spawn com calma.</div>
+</section>
+
+<!-- ================= DINHEIRO ================= -->
+<section class="cap" id="dinheiro">
+  <header>
+    <div class="eyebrow">Economia</div>
+    <h2>Dinheiro e comércio</h2>
+    <p>A moeda é o <span class="moeda">⛃</span>. Todo jogador novo começa com <span class="moeda">100 ⛃</span>. O dinheiro existe no saldo e também como item físico.</p>
+  </header>
+  <div class="pilha">
+    <div class="grade">
+      <div class="bloco"><h3>Missões</h3><p>3 diárias (cerca de <span class="moeda">55–70 ⛃</span> cada, mais <span class="moeda">80 ⛃</span> por fazer todas) e 2 semanais (<span class="moeda">240–400 ⛃</span>).</p></div>
+      <div class="bloco"><h3>Vender aos villagers</h3><p>No spawn. Cada jogador recebe até <span class="moeda">1.500 ⛃</span> por dia vendendo; o limite zera à meia-noite.</p></div>
+      <div class="bloco"><h3>Recompensa diária</h3><p>Paga sozinha ao logar: <span class="moeda">50 ⛃</span> no primeiro dia da sequência, subindo até <span class="moeda">200 ⛃</span> no sétimo. <code>/diaria</code></p></div>
+      <div class="bloco"><h3>Convidar amigos</h3><p>Seu amigo entra e usa <code>/convite seu-nick</code> nas primeiras 24h. Quando ele completa 2h de jogo, você ganha <span class="moeda">500 ⛃</span> e ele <span class="moeda">200 ⛃</span>. Até 5 por semana.</p></div>
+      <div class="bloco"><h3>Outros jogadores</h3><p>Leilão (<code>/ah</code>, taxa de 5%), lojas de baú dos jogadores e recompensas por cabeça no PvP. Na loja de baú o preço é por unidade; para vender em pacote use <code>/qs size 64</code> e <code>/qs price 80</code>.</p></div>
+    </div>
+    <div class="grade duas">
+      <div class="bloco">
+        <h3>Preços que mudam</h3>
+        <p>As lojas do spawn seguem oferta e procura: o preço vai de 50% a 150% do normal. Muita gente vendendo o mesmo item derruba o preço dele.</p>
+        <p>Toda semana algumas categorias ficam em promoção (dias 1–2 Minerador, 8–9 Construção, 15–16 Campo, 22–23 Redstone, 28 Ferreiro), com limite de itens por pessoa. O item em promoção brilha no menu. <code>/promocao</code></p>
+      </div>
+      <div class="bloco">
+        <h3>Dinheiro físico</h3>
+        <p><code>/sacar &lt;valor&gt;</code> transforma saldo em moedas e cédulas na mão; <code>/depositar</code> devolve. Dinheiro físico pode ser guardado em baú, trocado, usado em lojas de baú e <b>roubado de quem morre</b>.</p>
+        <div class="moedas">
+          <div>Barra <b>10.000</b></div><div>Cédula <b>1.000</b></div><div>Ouro <b>100</b></div><div>Prata <b>10</b></div><div>Cobre <b>1</b></div>
+        </div>
+      </div>
+    </div>
+    <div class="tbl"><table>
+      <tr><th>Comando pago</th><th class="n">Custo</th></tr>
+      <tr><td><code>/repair</code> conserta o item da mão</td><td class="n moeda">300 ⛃</td></tr>
+      <tr><td><code>/hat</code> põe o bloco da mão na cabeça</td><td class="n moeda">100 ⛃</td></tr>
+      <tr><td><code>/ec</code> abre o baú do fim de qualquer lugar</td><td class="n">grátis</td></tr>
+    </table></div>
+  </div>
+</section>
+
+<!-- ================= PROFISSÕES ================= -->
+<section class="cap" id="profissoes">
+  <header>
+    <div class="eyebrow">Evolução</div>
+    <h2>Profissões e caminhos</h2>
+    <p>Você tem as 5 profissões ao mesmo tempo, e cada uma sobe de nível sozinha conforme você joga. Abra tudo em <code>/profissoes</code>.</p>
+  </header>
+  <div class="pilha">
+    <div class="texto">
+      <p>A cada <b>3 níveis</b> você ganha <b>1 ponto de habilidade</b> naquela profissão. Os pontos vão para as <b>habilidades gerais</b> (que todo mundo tem) ou para o <b>caminho</b> que você escolher no nível 10. Cada profissão tem 3 caminhos e você segue só um: é ele que define o seu estilo.</p>
+    </div>
+    <div class="nivel-box"><div class="nivel" aria-label="Marcos de nível de uma profissão">
+      <div class="linha"></div>
+      <div class="marco" style="left:0%"><i></i><b>NV 1</b><span>começa</span></div>
+      <div class="marco" style="left:18.4%"><i></i><b>NV 10</b><span>escolhe o caminho e libera a 1ª habilidade</span></div>
+      <div class="marco" style="left:38.8%"><i></i><b>NV 20</b><span>2ª habilidade do caminho</span></div>
+      <div class="marco" style="left:69.4%"><i></i><b>NV 35</b><span>poder do caminho</span></div>
+      <div class="marco" style="left:96%"><i></i><b>NV 48</b><span>pontos para completar tudo</span></div>
+    </div></div>
+    <div class="grade">
+      <div class="bloco"><h4>Habilidades gerais</h4><p><b>Sorte</b>: +5% por nível de dobrar o que você coleta. <b>Ferramenta resistente</b>: +15% por nível de a ferramenta não gastar. <b>Aprendiz dedicado</b>: +10% de XP por nível. Cada uma vai até o nível 3.</p></div>
+      <div class="bloco"><h4>Usar o poder</h4><p>Segure a ferramenta da profissão, <b>agache e clique com o botão direito</b>. Aparece o nome do poder na tela, e um aviso quando ele recarrega.</p></div>
+      <div class="bloco"><h4>Trocar de caminho</h4><p>O primeiro caminho é grátis. Trocar custa <span class="moeda">1.500 ⛃</span> e os pontos gastos no caminho antigo voltam para você.</p></div>
+    </div>
+    <div class="dica"><b>Sem farm:</b> blocos colocados por jogadores não dão XP nem drop dobrado, e monstros de spawner não contam para o Caçador. Na <b>Hora Dobrada</b> o XP vale o dobro.</div>
+
+    <div class="abas" role="tablist" aria-label="Profissões" id="abas"></div>
+    <div id="painel-prof" role="tabpanel"></div>
+  </div>
+</section>
+
+<!-- ================= MISSÕES ================= -->
+<section class="cap" id="missoes">
+  <header>
+    <div class="eyebrow">Objetivos</div>
+    <h2>Missões e conquistas</h2>
+    <p>Missões renovam todo dia e toda semana, iguais para todo o servidor. Conquistas pagam uma vez e liberam um título para o chat.</p>
+  </header>
+  <div class="pilha">
+    <div class="grade duas">
+      <div class="bloco"><h3>Diárias <code>/missoes</code></h3><p>3 por dia, sorteadas entre minerar carvão ou ferro, quebrar pedra, cortar troncos, colher trigo, cenoura, batata ou abóbora, criar animais, derrotar monstros, zumbis ou esqueletos, pescar e jogar 60 minutos. Cada uma também dá XP na profissão ligada a ela.</p></div>
+      <div class="bloco"><h3>Semanais</h3><p>2 por semana e bem maiores: 24 diamantes, 1.000 troncos, 800 colheitas, 250 monstros, chegar primeiro a um meteoro, jogar 8 horas e outras. Pagam de <span class="moeda">300</span> a <span class="moeda">500 ⛃</span>.</p></div>
+    </div>
+    <div class="dica"><b>Tempo parado não conta:</b> minutos AFK ficam de fora das missões de jogar, e nas missões de PvP só conta matar jogadores diferentes.</div>
+    <div class="grade duas" style="align-items:start">
+      <div class="texto"><h3>As 20 conquistas</h3><p>Veja as suas em <code>/conquistas</code> e equipe um título com <code>/titulo &lt;id&gt;</code>. O valor é a recompensa paga uma única vez.</p></div>
+    </div>
+    <div class="conq" id="conquistas"></div>
+  </div>
+</section>
+
+<!-- ================= EVENTOS ================= -->
+<section class="cap" id="eventos">
+  <header>
+    <div class="eyebrow">Eventos</div>
+    <h2>Meteoros e Hora Dobrada</h2>
+    <p>Dois motivos para estar online na hora certa. <code>/evento</code> mostra o que vem por aí.</p>
+  </header>
+  <div class="pilha">
+    <h3>Chuva de meteoros</h3>
+    <div class="tempo">
+      <div><b>A cada 2–4 h</b><span>Com 2 ou mais jogadores online, o servidor anuncia as coordenadas.</span></div>
+      <div><b>+3 min</b><span>O meteoro cai longe das cidades, num baú sobre magma.</span></div>
+      <div><b>Primeiro a abrir</b><span>Leva o baú, aparece no chat e conta para missão e conquista.</span></div>
+      <div><b>+15 min</b><span>Se ninguém abrir, o meteoro some.</span></div>
+    </div>
+    <div class="grade duas" style="align-items:start">
+      <div class="bloco">
+        <h4>Chance de cada item no baú</h4>
+        <div class="chance" id="loot"></div>
+      </div>
+      <div class="bloco">
+        <h3>Hora Dobrada</h3>
+        <p>Toda <b>sexta às 20h</b>, <b>sábado às 16h</b> e <b>domingo às 16h</b>, por 1 hora.</p>
+        <p>O XP de profissão vale <b>o dobro</b> e os villagers pagam <b>25% a mais</b> pelo que você vende. O limite diário de venda continua valendo. Uma barra no topo da tela mostra quanto tempo falta.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CLÃS ================= -->
+<section class="cap" id="clas">
+  <header>
+    <div class="eyebrow">Comunidade</div>
+    <h2>Clãs</h2>
+    <p>Clã é a sua cidade. Ela protege as construções dos moradores, tem banco próprio e pode crescer, se aliar e fazer inimigos. O painel fica em <code>/cla</code>.</p>
+  </header>
+  <div class="pilha">
+    <div class="grade">
+      <div class="bloco"><h3>Criar e crescer</h3><p><code>/t new &lt;nome&gt;</code> cria a cidade. <code>/t claim</code> protege o chunk onde você está. O banco da cidade paga uma manutenção por dia: mantenha dinheiro nele com <code>/t deposit</code>.</p></div>
+      <div class="bloco"><h3>Cofre do clã</h3><p>Um baú compartilhado que abre de qualquer lugar com <code>/cla cofre</code>: 27 espaços, 54 com melhoria. Só o prefeito e quem tem o cargo <code>assistant</code> abrem.</p></div>
+      <div class="bloco"><h3>Terreno particular</h3><p>O prefeito dá um chunk a um morador com <code>/cla terreno dar &lt;nick&gt;</code>. Lá só o dono e os amigos dele (<code>/res friend add</code>) constroem e abrem baús. Nem o prefeito mexe.</p></div>
+    </div>
+
+    <div class="grade duas" style="align-items:start">
+      <div class="bloco">
+        <h3>Contribuição diária</h3>
+        <p>O prefeito define quanto cada morador paga por dia ao banco do clã, ele mesmo incluído: um valor padrão para todos ou um valor próprio para alguém. Máximo de <span class="moeda">500 ⛃</span>.</p>
+        <p>A cobrança é todo dia às 12h. Quem estiver sem saldo fica devendo e paga junto na próxima vez, ou antes com <code>/cla contribuicao pagar</code>. Ninguém é expulso por isso.</p>
+      </div>
+      <div class="tbl"><table>
+        <tr><th>Melhoria (banco do clã)</th><th class="n">Custo</th></tr>
+        <tr><td><b>Cofre grande</b><br><span style="color:var(--muted)">cofre de 27 para 54 espaços</span></td><td class="n moeda">5.000 ⛃</td></tr>
+        <tr><td><b>Terrenos extras</b><br><span style="color:var(--muted)">+16 chunks por nível, 3 níveis</span></td><td class="n moeda">3.000 · 6.000 · 12.000 ⛃</td></tr>
+        <tr><td><b>Velocidade</b><br><span style="color:var(--muted)">moradores correm mais dentro da cidade</span></td><td class="n moeda">4.000 ⛃</td></tr>
+        <tr><td><b>Pressa</b><br><span style="color:var(--muted)">quebram blocos mais rápido na cidade</span></td><td class="n moeda">6.000 ⛃</td></tr>
+        <tr><td><b>Fartura</b><br><span style="color:var(--muted)">a fome não cai dentro da cidade</span></td><td class="n moeda">8.000 ⛃</td></tr>
+      </table></div>
+    </div>
+
+    <div class="texto"><h3>Diplomacia entre clãs</h3><p>Só o prefeito propõe. O outro clã responde com <code>/cla aceitar &lt;clã&gt;</code> ou <code>/cla recusar &lt;clã&gt;</code> em até 10 minutos. Tudo aparece no mapa como linhas entre as cidades.</p></div>
+    <div class="rel">
+      <div style="--c:var(--ok)"><b>Aliança militar</b><span>Até 3 aliados. Não trocam dano e têm chat próprio (<code>/ca</code>). Cada clã continua independente.</span></div>
+      <div style="--c:var(--warn)"><b>Trégua</b><span>De 1 a 7 dias sem combate entre os dois clãs.</span></div>
+      <div style="--c:var(--bad)"><b>Rivalidade</b><span>Anunciada para o servidor. Abates entre rivais contam no ranking.</span></div>
+      <div style="--c:var(--ok)"><b>Paz</b><span>Encerra uma rivalidade, se os dois aceitarem.</span></div>
+      <div style="--c:var(--gold)"><b>Tributo</b><span>Um banco paga ao outro todo dia, pelo prazo combinado (até 30 dias). Sem saldo, o acordo quebra.</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= GUERRA ================= -->
+<section class="cap" id="guerra">
+  <header>
+    <div class="eyebrow">Guerra</div>
+    <h2>Nações e cercos</h2>
+    <p>Nação é diferente de aliança militar: é uma união formal de cidades, com capital e cargos militares.</p>
+  </header>
+  <div class="grade">
+    <div class="bloco"><h3>Formar uma nação</h3><p><code>/n new &lt;nome&gt;</code> cria a nação com a sua cidade como capital. <code>/n add &lt;cidade&gt;</code> convida outras cidades; <code>/nc</code> é o chat da nação.</p></div>
+    <div class="bloco"><h3>Cercos</h3><p>A guerra usa uma bandeira de cerco perto da cidade inimiga. As batalhas acontecem em horários fixos: veja com <code>/sw nextsession</code> e acompanhe o placar com <code>/sw hud</code>.</p></div>
+    <div class="bloco"><h3>Ficar de fora</h3><p>Uma cidade pode virar pacífica com <code>/sw town togglepeaceful</code>: não é atacada, mas também não ataca ninguém.</p></div>
+  </div>
+</section>
+
+<!-- ================= PVP ================= -->
+<section class="cap" id="pvp">
+  <header>
+    <div class="eyebrow">Combate</div>
+    <h2>PvP e cabeças a prêmio</h2>
+    <p>Fora do spawn e das cidades protegidas, o PvP está ligado. Algumas regras deixam tudo mais justo.</p>
+  </header>
+  <div class="grade">
+    <div class="bloco"><h3>Combate</h3><p>Depois de bater ou apanhar, você fica 15 segundos em combate: nada de teleporte. <b>Deslogar em combate mata você</b> e seus itens caem.</p></div>
+    <div class="bloco"><h3>Cabeça a prêmio</h3><p>Cada abate aumenta o valor da sua cabeça (+50, +75, +100…). Quem te matar leva tudo. Você também pode pôr dinheiro na cabeça de alguém com <code>/bounty add</code>.</p></div>
+    <div class="bloco"><h3>Sem trapaça</h3><p>Matar a mesma pessoa em menos de 30 minutos, contas do mesmo IP ou aliados não aumenta recompensa nenhuma.</p></div>
+  </div>
+  <div class="dica" style="margin-top:18px"><b>Ranking diário no Discord:</b> todo dia de manhã sai quem são os mais ricos, quem mais jogou, o melhor de cada profissão, quem tem mais conquistas e mais abates em clãs rivais.</div>
+</section>
+
+<footer>
+  <span>Zanthora · Paper 26.3</span>
+  <a href="https://clear2000.github.io/zanthora-mapa/comandos/">Todos os comandos</a>
+  <a href="https://discord.gg/sTVyFC78kt">discord.gg/sTVyFC78kt</a>
+</footer>
+</div>
+
+<script>
+const PROF = [
+  { id: 'minerador', nome: 'Minerador', cor: '--min', fonte: 'Minérios e pedras',
+    xp: [['Ancient debris', 40], ['Esmeralda', 25], ['Diamante', 20], ['Ouro', 8], ['Lápis', 6], ['Ferro', 5], ['Redstone', 4], ['Cobre, carvão, quartzo', 3], ['Obsidiana', 2], ['Pedra', 0.2]],
+    caminhos: [
+      { nome: 'Escavador', lema: 'Força bruta: cava rápido e abre túneis.',
+        h: [['Braço Forte', 'Pressa I com a picareta na mão (nível 1: abaixo do Y 0, nível 2: abaixo do Y 64, nível 3: em todo lugar).'],
+            ['Impacto', '+6% por nível de quebrar também os 8 blocos de pedra em volta.']],
+        p: ['Terremoto', 'Por 15 segundos, toda pedra ou minério que você quebra abre um buraco 3x3, com Pressa III.', '3 min'] },
+      { nome: 'Prospector', lema: 'Riqueza: acha mais minério e enxerga os veios.',
+        h: [['Faro de Minério', '+5% por nível de chance extra de dobrar minérios.'],
+            ['Pepita', '+1,5% por nível de achar minério bruto ao quebrar pedra comum.']],
+        p: ['Visão de Minério', 'Por 20 segundos, os minérios num raio de 12 blocos brilham através das paredes, cada um com a sua cor. Só você vê.', '4 min'] },
+      { nome: 'Forjador', lema: 'Fogo: o minério já sai derretido.',
+        h: [['Toque de Brasa', '+15% por nível de o minério cair já em barra (ferro, ouro, cobre, sucata de netherite).'],
+            ['Pele de Lava', '-20% por nível do dano de fogo e lava.']],
+        p: ['Picareta Incandescente', 'Por 30 segundos, todo minério cai derretido e em dobro, e você fica imune ao fogo.', '3 min'] } ] },
+  { id: 'lenhador', nome: 'Lenhador', cor: '--len', fonte: 'Troncos',
+    xp: [['Tronco', 1]],
+    caminhos: [
+      { nome: 'Derrubador', lema: 'Velocidade: limpa uma floresta num piscar.',
+        h: [['Golpe Firme', '+10% por nível de cortar também o tronco de cima.'],
+            ['Fôlego da Floresta', 'Ao cortar tronco você ganha Velocidade (nível 1: 3s, nível 2: 6s, nível 3: Velocidade II por 6s).']],
+        p: ['Queda da Árvore', 'O próximo tronco que você cortar em 20 segundos derruba a árvore inteira, até 80 troncos.', '2 min'] },
+      { nome: 'Guardião da Floresta', lema: 'Natureza: replanta, colhe frutos e cura.',
+        h: [['Replantio', '+34% por nível de plantar a muda sozinho ao cortar a base da árvore (nível 3: sempre).'],
+            ['Frutos da Mata', '+3% por nível de cair maçã ao cortar tronco. No nível 3, às vezes cai maçã dourada.']],
+        p: ['Bênção da Floresta', 'As mudas num raio de 8 blocos crescem na hora, e você e quem está perto ganham Regeneração II.', '3 min'] },
+      { nome: 'Machado de Guerra', lema: 'Combate: o machado vira arma.',
+        h: [['Corte Pesado', '+5% por nível de dano com machado.'],
+            ['Casca Grossa', '-4% por nível do dano recebido com machado na mão.']],
+        p: ['Golpe Partidor', 'O próximo golpe de machado em 10 segundos causa dano x2,5 (x1,5 em jogadores), arremessa o alvo e acerta os monstros em volta.', '90 s'] } ] },
+  { id: 'fazendeiro', nome: 'Fazendeiro', cor: '--faz', fonte: 'Colheitas maduras e criação de animais',
+    xp: [['Cruzar animais', 3], ['Colheita madura', 1.5], ['Melancia, abóbora', 1], ['Cana, cacto, bambu', 0.3]],
+    caminhos: [
+      { nome: 'Agricultor', lema: 'Lavoura: mais colheita e plantação que se replanta.',
+        h: [['Colheita Farta', '+6% por nível de chance extra de dobrar a colheita.'],
+            ['Replantio Automático', '+34% por nível de a plantação se replantar sozinha (nível 3: sempre).']],
+        p: ['Chuva Fértil', 'As plantações num raio de 6 blocos crescem na hora.', '3 min'] },
+      { nome: 'Pecuarista', lema: 'Criação: rebanhos maiores e mais carne.',
+        h: [['Gêmeos', '+12% por nível de nascer um filhote extra ao cruzar animais.'],
+            ['Açougueiro', '+20% por nível de os animais soltarem o dobro de carne e couro.']],
+        p: ['Chamado do Rebanho', 'Os filhotes num raio de 10 blocos crescem na hora e os adultos podem cruzar de novo.', '3 min'] },
+      { nome: 'Cozinheiro', lema: 'Cozinha: comida rende mais e cura o grupo.',
+        h: [['Bom Apetite', 'Cada comida mata +1 de fome por nível.'],
+            ['Colheita Dourada', '+0,7% por nível de a colheita soltar cenoura dourada, melancia reluzente ou maçã dourada.']],
+        p: ['Banquete', 'Você e quem está num raio de 8 blocos ficam saciados e ganham Regeneração e Absorção.', '4 min'] } ] },
+  { id: 'cacador', nome: 'Caçador', cor: '--cac', fonte: 'Monstros (de spawner não conta)',
+    xp: [['Wither, dragão', 100], ['Warden', 60], ['Wither skeleton, ravager', 10], ['Enderman, blaze, bruxa', 6], ['Creeper, phantom', 4], ['Zumbi, esqueleto, aranha', 3]],
+    caminhos: [
+      { nome: 'Guerreiro', lema: 'Corpo a corpo: bate forte e se cura matando.',
+        h: [['Instinto', '+8% por nível de dano contra monstros.'],
+            ['Sede de Sangue', 'Matar um monstro cura 1 coração por nível.']],
+        p: ['Fúria Berserker', 'Por 12 segundos: Força II, Velocidade e seus golpes acertam também os monstros em volta.', '3 min'] },
+      { nome: 'Arqueiro', lema: 'Distância: flechas fortes e que não acabam.',
+        h: [['Mira Certeira', '+8% por nível de dano com flechas.'],
+            ['Aljava Infinita', '+20% por nível de chance de não gastar a flecha.']],
+        p: ['Chuva de Flechas', 'Chovem 24 flechas sobre o ponto para onde você está mirando, até 40 blocos de distância.', '3 min'] },
+      { nome: 'Predador', lema: 'Caçada: aguenta mais e coleciona troféus.',
+        h: [['Couro Grosso', '-5% por nível do dano recebido de monstros.'],
+            ['Troféus', '+1% por nível de cair a cabeça do monstro e +5% por nível de dobrar o saque.']],
+        p: ['Olhar do Predador', 'Os monstros num raio de 32 blocos brilham por 20 segundos e ficam lentos, e você ganha Visão Noturna.', '3 min'] } ] },
+  { id: 'pescador', nome: 'Pescador', cor: '--pes', fonte: 'Pescar',
+    xp: [['Tesouro ou item', 8], ['Peixe', 4]],
+    caminhos: [
+      { nome: 'Mestre do Cardume', lema: 'Fartura: pesca mais e mais rápido.',
+        h: [['Rede Larga', '+6% por nível de chance extra de pescar em dobro.'],
+            ['Fisgada Rápida', 'O peixe morde 15% mais rápido por nível.']],
+        p: ['Cardume', 'Por 30 segundos, cada pesca vem triplicada e você ganha Graça do Golfinho.', '3 min'] },
+      { nome: 'Caçador de Tesouros', lema: 'Sorte: tesouros e itens raros do mar.',
+        h: [['Caça-Tesouro', '+4% por nível de pescar um tesouro extra (etiqueta, sela, concha, garrafas de XP).'],
+            ['Sorte do Mar', 'Efeito Sorte enquanto segura a vara, melhorando o que você pesca.']],
+        p: ['Baú Afundado', 'A próxima pesca em 60 segundos puxa um baú afundado com vários tesouros: diamante, esmeralda, livro encantado e, com sorte, coração do mar.', '5 min'] },
+      { nome: 'Lobo do Mar', lema: 'Mar: nada, mergulha e voa com o gancho.',
+        h: [['Pulmão de Peixe', 'Na água: respiração (nível 1), visão no escuro (nível 2) e Graça do Golfinho (nível 3).'],
+            ['Arpão', '+10% por nível de dano com tridente.']],
+        p: ['Gancho', 'A vara vira um gancho: você é lançado para onde está olhando e cai sem tomar dano.', '45 s'] } ] }
+];
+
+const CONQ = [
+  ['Primeiros Passos', 'Conclua sua primeira missão', 100, 'Novato'], ['Dedicado', 'Conclua 25 missões', 500, 'Dedicado'],
+  ['Incansável', 'Conclua 150 missões', 2000, 'Incansável'], ['Aprendiz', 'Nível 10 em uma profissão', 300, 'Aprendiz'],
+  ['Especialista', 'Nível 25 em uma profissão', 1000, 'Especialista'], ['Mestre de Ofício', 'Nível 50 em uma profissão', 3000, 'Mestre'],
+  ['Versátil', 'Todas as profissões no nível 10', 1500, 'Versátil'], ['Próspero', 'Tenha 10.000 ⛃ de saldo', 0, 'Próspero'],
+  ['Magnata', 'Tenha 100.000 ⛃ de saldo', 0, 'Magnata'], ['Assíduo', 'Jogue 10 horas', 300, 'Assíduo'],
+  ['Lenda Viva', 'Jogue 150 horas', 2000, 'Lenda Viva'], ['Cidadão', 'Entre em um clã', 100, 'Cidadão'],
+  ['Fundador', 'Seja o líder de um clã', 300, 'Fundador'], ['Metrópole', 'Esteja em um clã com 10 moradores', 1000, 'Metropolitano'],
+  ['Diplomata', 'Seu clã fez uma aliança militar', 300, 'Diplomata'], ['Guerreiro', 'Mate 10 jogadores', 300, 'Guerreiro'],
+  ['Carrasco', 'Mate 100 jogadores', 2000, 'Carrasco'], ['Caçador de Estrelas', 'Seja o primeiro a abrir um meteoro', 300, 'Caçador de Estrelas'],
+  ['Garimpeiro', 'Minere 100 diamantes', 500, 'Garimpeiro'],
+  ['Recrutador', 'Traga 5 jogadores com /convite', 1000, 'Recrutador']
+];
+
+const LOOT = [['Diamante (2–5)', 100], ['Ouro (6–16)', 90], ['Ferro (10–24)', 90], ['Esmeralda (4–10)', 80], ['Garrafas de XP (8–24)', 80],
+  ['Maçã dourada (1–3)', 50], ['Ancient debris (1–2)', 35], ['Sucata de netherite', 15], ['Maçã encantada', 4], ['Estrela do Nether', 2]];
+
+const fmt = n => n.toLocaleString('pt-BR');
+const esc = s => s.replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
+
+function mostrar(id) {
+  const p = PROF.find(x => x.id === id) || PROF[0];
+  document.querySelectorAll('#abas button').forEach(b => b.setAttribute('aria-selected', b.dataset.id === p.id));
+  const painel = document.getElementById('painel-prof');
+  painel.style.setProperty('--pc', `var(${p.cor})`);
+  painel.className = 'prof';
+  painel.innerHTML = `
+    <div class="prof-topo">
+      <h3>${p.nome}</h3>
+      <p style="color:var(--muted)">Ganha XP com: ${esc(p.fonte)}. XP por ação:</p>
+      <div class="xp">${p.xp.map(([n, v]) => `<span>${esc(n)} <b>${fmt(v)}</b></span>`).join('')}</div>
+    </div>
+    <div class="caminhos">${p.caminhos.map(c => `
+      <article class="caminho">
+        <header><h3>${esc(c.nome)}</h3><p>${esc(c.lema)}</p></header>
+        ${c.h.map((h, i) => `<div class="hab"><span class="nv">NV ${i ? 20 : 10}</span><b>${esc(h[0])}</b><p>${esc(h[1])}</p></div>`).join('')}
+        <div class="poder"><span class="rot">Poder · NV 35</span><b>${esc(c.p[0])}</b><p>${esc(c.p[1])}</p><span class="rec">recarga ${c.p[2]}</span></div>
+      </article>`).join('')}
+    </div>`;
+}
+
+const abas = document.getElementById('abas');
+PROF.forEach(p => {
+  const b = document.createElement('button');
+  b.type = 'button'; b.role = 'tab'; b.dataset.id = p.id; b.textContent = p.nome;
+  b.style.setProperty('--pc', `var(${p.cor})`);
+  b.addEventListener('click', () => mostrar(p.id));
+  abas.appendChild(b);
+});
+mostrar(PROF[0].id);
+
+document.getElementById('conquistas').innerHTML = CONQ.map(([n, d, r, t]) =>
+  `<div><b>${esc(n)}</b><span>${esc(d)}</span><em>${r ? fmt(r) + ' ⛃ · ' : ''}[${esc(t)}]</em></div>`).join('');
+
+document.getElementById('loot').innerHTML = LOOT.map(([n, c]) =>
+  `<span>${esc(n)}</span><span class="b"><i style="width:${c}%"></i></span><span class="p">${c}%</span>`).join('');
+
+// Destaca o capítulo visível na trilha
+const links = [...document.querySelectorAll('.trilha a')];
+const caps = links.map(a => document.querySelector(a.getAttribute('href')));
+const obs = new IntersectionObserver(es => {
+  es.forEach(e => { if (e.isIntersecting) links.forEach(a => a.classList.toggle('atual', a.getAttribute('href') === '#' + e.target.id)); });
+}, { rootMargin: '-30% 0px -60% 0px' });
+caps.forEach(c => c && obs.observe(c));
+</script>
+
+</body>
+</html>
